@@ -144,3 +144,35 @@ database/
 
 # GitHub AI instructions
 .github/instructions/
+
+# Security scanning
+.cache_ggshield/
+
+# Editor config and formatting
+.editorconfig
+
+# Pre-commit hooks
+.pre-commit-config.yaml
+
+# Documentation drafts
+*.md.bak
+IMPLEMENTATION_SUMMARY.md
+LAZY_LOADING_COMPLETE.md
+OPTIMIZATION_SUMMARY.md
+MIGRATION_GUIDE.md
+LAZY_LOADING_GUIDE.md
+
+# Test and build artifacts
+coverage/
+.nyc_output/
+storybook-static/
+
+# TypeScript
+*.tsbuildinfo
+
+# Health manager specific additions
+scripts/
+docker-compose.secure.yml
+
+# Local directory
+local/
