@@ -548,7 +548,7 @@ const DashboardPage: React.FC = () => {
               primary={profile.name}
               secondary={
                 profile.is_primary_profile ? 'Primary Profile' :
-                `${profile.age || 'Unknown'} years old`
+                `${(profile as any).age || 'Unknown'} years old`
               }
             />
             {selectedProfile?.id === profile.id && (
