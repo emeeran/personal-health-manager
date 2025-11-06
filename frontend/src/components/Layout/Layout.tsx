@@ -22,6 +22,7 @@ import {
   MedicalServices as MedicalIcon,
   Description as DocumentIcon,
   Medication as MedicationIcon,
+  Psychology as AIIcon,
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
 } from '@mui/icons-material';
@@ -32,6 +33,7 @@ const drawerWidth = 240;
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+  { text: 'AI Health Assistant', icon: <AIIcon />, path: '/ai-chat' },
   { text: 'Profiles', icon: <PeopleIcon />, path: '/profiles' },
   { text: 'Medical Visits', icon: <MedicalIcon />, path: '/visits' },
   { text: 'Documents', icon: <DocumentIcon />, path: '/documents' },

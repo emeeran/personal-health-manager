@@ -14,6 +14,7 @@ import ProfilesPage from './pages/Profiles/ProfilesPage';
 import VisitsPage from './pages/Visits/VisitsPage';
 import DocumentsPage from './pages/Documents/DocumentsPage';
 import MedicationsPage from './pages/Medications/MedicationsPage';
+import AIChatPage from './pages/AIChatPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path="visits" element={<VisitsPage />} />
           <Route path="documents" element={<DocumentsPage />} />
           <Route path="medications" element={<MedicationsPage />} />
+          <Route path="ai-chat" element={<AIChatPage />} />
         </Route>
 
         {/* 404 page */}
