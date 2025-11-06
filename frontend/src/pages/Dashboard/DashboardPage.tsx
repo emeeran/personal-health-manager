@@ -17,40 +17,37 @@ import {
   ListItemIcon,
   ListItemText,
   Chip,
+  Card,
+  CardContent,
 } from '@mui/material';
 import {
   Refresh as RefreshIcon,
   Edit as EditIcon,
   Settings as SettingsIcon,
-  AccountCircle as AccountIcon,
   Logout as LogoutIcon,
   Person as PersonIcon,
   PeopleAlt as PeopleAltIcon,
   Dashboard as DashboardIcon,
+  Timeline as TimelineIcon,
+  Assessment as AssessmentIcon,
+  Notifications as NotificationsIcon,
+  Event as EventIcon,
+  MedicalServices as MedicalServicesIcon,
+  Description as DescriptionIcon,
 } from '@mui/icons-material';
 import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
-import {
-  fetchAllDashboardData,
-  clearError,
-  fetchDashboardMetrics,
-} from '../../store/slices/dashboardSlice';
+import { setMetrics, setLoading, setError } from '../../store/slices/dashboardSlice';
 import { logout } from '../../store/slices/authSlice';
-import { fetchProfiles, setCurrentProfile } from '../../store/slices/profileSlice';
+import { fetchProfiles } from '../../store/slices/profileSlice';
 import { setSelectedProfile } from '../../store/slices/profilesSlice';
 import { useNavigate } from 'react-router-dom';
-import HealthMetricsOverview from '../../components/dashboard/HealthMetricsOverview';
-import HealthTrendsChart from '../../components/dashboard/HealthTrendsChart';
-import HealthAlerts from '../../components/dashboard/HealthAlerts';
-import RecentActivities from '../../components/dashboard/RecentActivities';
-import HealthProfileOverview from '../../components/dashboard/HealthProfileOverview';
 
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { metrics, stats, alerts, trends, recentActivities, loading, error } =
-    useSelector((state: RootState) => state.dashboard);
+  const { metrics, loading, error } = useSelector((state: RootState) => state.dashboard);
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { profiles, selectedProfile } = useSelector((state: RootState) => state.profiles);
 
@@ -58,7 +55,32 @@ const DashboardPage: React.FC = () => {
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
-    dispatch(fetchAllDashboardData());
+    // Simulate loading dashboard data
+    dispatch(setLoading(true));
+    setTimeout(() => {
+      dispatch(setMetrics({
+        totalVisits: 12,
+        activeMedications: 3,
+        totalDocuments: 8,
+        lastVisitDate: '2024-11-01',
+        upcomingAppointments: [
+          { id: 1, date: '2024-11-15', type: 'Check-up', doctor: 'Dr. Smith' },
+          { id: 2, date: '2024-12-01', type: 'Follow-up', doctor: 'Dr. Johnson' }
+        ],
+        hba1c: [
+          { date: '2024-01-01', value: 7.2 },
+          { date: '2024-04-01', value: 6.8 },
+          { date: '2024-07-01', value: 6.5 },
+          { date: '2024-10-01', value: 6.3 }
+        ],
+        recentActivity: [
+          { id: 1, type: 'visit', description: 'Annual check-up completed', date: '2024-11-01' },
+          { id: 2, type: 'medication', description: 'Updated prescription', date: '2024-10-28' },
+          { id: 3, type: 'document', description: 'Lab results uploaded', date: '2024-10-25' }
+        ]
+      }));
+      dispatch(setLoading(false));
+    }, 1000);
   }, [dispatch]);
 
   useEffect(() => {
@@ -68,11 +90,35 @@ const DashboardPage: React.FC = () => {
   }, [dispatch, isAuthenticated]);
 
   const handleRefresh = () => {
-    dispatch(fetchAllDashboardData());
+    dispatch(setLoading(true));
+    setTimeout(() => {
+      dispatch(setMetrics({
+        totalVisits: 12,
+        activeMedications: 3,
+        totalDocuments: 8,
+        lastVisitDate: '2024-11-01',
+        upcomingAppointments: [
+          { id: 1, date: '2024-11-15', type: 'Check-up', doctor: 'Dr. Smith' },
+          { id: 2, date: '2024-12-01', type: 'Follow-up', doctor: 'Dr. Johnson' }
+        ],
+        hba1c: [
+          { date: '2024-01-01', value: 7.2 },
+          { date: '2024-04-01', value: 6.8 },
+          { date: '2024-07-01', value: 6.5 },
+          { date: '2024-10-01', value: 6.3 }
+        ],
+        recentActivity: [
+          { id: 1, type: 'visit', description: 'Annual check-up completed', date: '2024-11-01' },
+          { id: 2, type: 'medication', description: 'Updated prescription', date: '2024-10-28' },
+          { id: 3, type: 'document', description: 'Lab results uploaded', date: '2024-10-25' }
+        ]
+      }));
+      dispatch(setLoading(false));
+    }, 1000);
   };
 
   const handleClearError = () => {
-    dispatch(clearError());
+    dispatch(setError(null));
   };
 
   const handleLogout = async () => {
@@ -81,7 +127,6 @@ const DashboardPage: React.FC = () => {
       navigate('/login');
       setUserMenuAnchor(null);
     } catch (error) {
-      // Even if API call fails, redirect to login
       navigate('/login');
       setUserMenuAnchor(null);
     }
@@ -105,10 +150,43 @@ const DashboardPage: React.FC = () => {
 
   const handleSelectProfile = (profile: any) => {
     dispatch(setSelectedProfile(profile));
-    dispatch(setCurrentProfile(profile));
     setProfileMenuAnchor(null);
-    // Refresh dashboard data for the new profile
-    dispatch(fetchAllDashboardData());
+    handleRefresh();
+  };
+
+  const getHealthScore = (metrics: any): number => {
+    if (!metrics) return 0;
+    let score = 0;
+    let total = 100;
+
+    // Visit regularity (30%)
+    if (metrics.totalVisits > 0) {
+      score += Math.min(30, (metrics.totalVisits / 12) * 30);
+    }
+
+    // Document organization (25%)
+    if (metrics.totalDocuments > 0) {
+      score += Math.min(25, (metrics.totalDocuments / 20) * 25);
+    }
+
+    // Medication management (25%)
+    if (metrics.activeMedications > 0) {
+      score += Math.min(25, (metrics.activeMedications / 5) * 25);
+    }
+
+    // Appointments (20%)
+    if (metrics.upcomingAppointments.length > 0) {
+      score += 20;
+    }
+
+    return Math.round((score / total) * 100);
+  };
+
+  const getHealthScoreText = (score: number): string => {
+    if (score >= 80) return 'Excellent health management!';
+    if (score >= 60) return 'Good progress on health goals.';
+    if (score >= 40) return 'Room for improvement in health tracking.';
+    return "Let's work together on better health management.";
   };
 
   return (
@@ -235,45 +313,169 @@ const DashboardPage: React.FC = () => {
 
         {/* Dashboard Content */}
         {!loading && metrics && (
-          <Grid container spacing={3}>
-            {/* Health Metrics Overview */}
-            <Grid item xs={12}>
-              <HealthMetricsOverview metrics={metrics} loading={loading} />
-            </Grid>
-
-            {/* Health Trends Charts */}
-            <Grid item xs={12}>
-              <HealthTrendsChart
-                metrics={metrics}
-                stats={stats}
-                trends={trends}
-                loading={loading}
-              />
-            </Grid>
-
-            {/* Health Alerts and Profile */}
-            <Grid item xs={12} md={8}>
-              <HealthAlerts alerts={alerts} loading={loading} />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <HealthProfileOverview
-                stats={stats}
-                loading={loading}
-                onEditProfile={() => {
-                  // Navigate to profile page
-                  window.location.href = '/profiles';
+          <>
+            {/* Welcome Message */}
+            <Box mb={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  bgcolor: 'primary.light',
+                  border: 1,
+                  borderColor: 'primary.main',
                 }}
-              />
+              >
+                <Typography variant="h6" color="primary.dark" gutterBottom>
+                  Welcome to Your Health Dashboard! 🏥
+                </Typography>
+                <Typography variant="body1" color="primary.dark">
+                  Your health score is <strong>{getHealthScore(metrics)}%</strong>
+                  .{getHealthScoreText(getHealthScore(metrics))}
+                </Typography>
+                <Typography variant="body2" color="primary.dark" sx={{ mt: 1 }}>
+                  Track your health journey with comprehensive insights into your
+                  medical history, medications, and wellness trends.
+                </Typography>
+              </Paper>
+            </Box>
+
+            {/* Metrics Overview */}
+            <Grid container spacing={3} mb={3}>
+              <Grid item xs={12} sm={6} md={3}>
+                <Card>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <MedicalServicesIcon color="primary" sx={{ fontSize: 40 }} />
+                      <Box>
+                        <Typography variant="h4" color="primary">
+                          {metrics.totalVisits}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Total Visits
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={3}>
+                <Card>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <AssessmentIcon color="secondary" sx={{ fontSize: 40 }} />
+                      <Box>
+                        <Typography variant="h4" color="secondary">
+                          {metrics.activeMedications}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Active Medications
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={3}>
+                <Card>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <DescriptionIcon color="success" sx={{ fontSize: 40 }} />
+                      <Box>
+                        <Typography variant="h4" color="success.main">
+                          {metrics.totalDocuments}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Documents
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={3}>
+                <Card>
+                  <CardContent>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <EventIcon color="warning" sx={{ fontSize: 40 }} />
+                      <Box>
+                        <Typography variant="h4" color="warning.main">
+                          {metrics.upcomingAppointments.length}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Upcoming Appointments
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
 
-            {/* Recent Activities */}
-            <Grid item xs={12}>
-              <RecentActivities
-                activities={recentActivities}
-                loading={loading}
-              />
+            {/* Upcoming Appointments */}
+            <Grid container spacing={3} mb={3}>
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
+                    <EventIcon />
+                    Upcoming Appointments
+                  </Typography>
+                  {metrics.upcomingAppointments.map((appointment: any) => (
+                    <Box key={appointment.id} sx={{ py: 1, borderBottom: 1, borderColor: 'divider' }}>
+                      <Typography variant="body1" fontWeight="medium">
+                        {appointment.type} - {appointment.doctor}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {appointment.date}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Paper>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 3 }}>
+                  <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
+                    <TimelineIcon />
+                    Recent Activity
+                  </Typography>
+                  {metrics.recentActivity.map((activity: any) => (
+                    <Box key={activity.id} sx={{ py: 1, borderBottom: 1, borderColor: 'divider' }}>
+                      <Typography variant="body1" fontWeight="medium">
+                        {activity.description}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {activity.date}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
+
+            {/* HbA1c Trends */}
+            <Paper sx={{ p: 3, mb: 3 }}>
+              <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
+                <AssessmentIcon />
+                HbA1c Trends
+              </Typography>
+              <Box display="flex" gap={2} overflow="auto">
+                {metrics.hba1c.map((reading: any, index: number) => (
+                  <Box key={index} textAlign="center" minWidth={80}>
+                    <Paper sx={{ p: 2, bgcolor: reading.value < 7 ? 'success.light' : 'warning.light' }}>
+                      <Typography variant="h6" color={reading.value < 7 ? 'success.dark' : 'warning.dark'}>
+                        {reading.value}%
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {reading.date}
+                      </Typography>
+                    </Paper>
+                  </Box>
+                ))}
+              </Box>
+            </Paper>
+          </>
         )}
 
         {/* Quick Actions */}
@@ -317,32 +519,6 @@ const DashboardPage: React.FC = () => {
             <SettingsIcon />
           </Fab>
         </Box>
-
-        {/* Welcome Message */}
-        {!loading && metrics && (
-          <Box mb={3}>
-            <Paper
-              sx={{
-                p: 3,
-                bgcolor: 'primary.light',
-                border: 1,
-                borderColor: 'primary.main',
-              }}
-            >
-              <Typography variant="h6" color="primary.dark" gutterBottom>
-                Welcome to Your Health Dashboard! 🏥
-              </Typography>
-              <Typography variant="body1" color="primary.dark">
-                Your health score is <strong>{getHealthScore(metrics)}%</strong>
-                .{getHealthScoreText(getHealthScore(metrics))}
-              </Typography>
-              <Typography variant="body2" color="primary.dark" sx={{ mt: 1 }}>
-                Track your health journey with comprehensive insights into your
-                medical history, medications, and wellness trends.
-              </Typography>
-            </Paper>
-          </Box>
-        )}
       </Box>
 
       {/* Profile Selection Menu */}
@@ -439,42 +615,6 @@ const DashboardPage: React.FC = () => {
       </Menu>
     </>
   );
-};
-
-// Helper functions
-const getHealthScore = (metrics: any): number => {
-  if (!metrics) return 0;
-  let score = 0;
-  let total = 100;
-
-  // Visit regularity (30%)
-  if (metrics.totalVisits > 0) {
-    score += Math.min(30, (metrics.totalVisits / 12) * 30); // Max 12 visits per year
-  }
-
-  // Document organization (25%)
-  if (metrics.totalDocuments > 0) {
-    score += Math.min(25, (metrics.totalDocuments / 20) * 25); // Max 20 documents
-  }
-
-  // Medication management (25%)
-  if (metrics.activeMedications > 0) {
-    score += Math.min(25, (metrics.activeMedications / 5) * 25); // Max 5 medications
-  }
-
-  // Appointments (20%)
-  if (metrics.upcomingAppointments.length > 0) {
-    score += 20;
-  }
-
-  return Math.round((score / total) * 100);
-};
-
-const getHealthScoreText = (score: number): string => {
-  if (score >= 80) return 'Excellent health management!';
-  if (score >= 60) return 'Good progress on health goals.';
-  if (score >= 40) return 'Room for improvement in health tracking.';
-  return "Let's work together on better health management.";
 };
 
 export default DashboardPage;
