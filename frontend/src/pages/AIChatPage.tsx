@@ -24,7 +24,7 @@ const AIChatPage: React.FC = () => {
     return (
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-          <RouterLink color="inherit" to="/dashboard">
+          <RouterLink color="inherit" to="/dashboard" style={{ textDecoration: 'none' }}>
             Dashboard
           </RouterLink>
           <Typography color="text.primary">AI Health Assistant</Typography>
@@ -55,7 +55,7 @@ const AIChatPage: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-        <RouterLink color="inherit" to="/dashboard">
+        <RouterLink color="inherit" to="/dashboard" style={{ textDecoration: 'none' }}>
           Dashboard
         </RouterLink>
         <Typography color="text.primary">AI Health Assistant</Typography>
