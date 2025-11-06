@@ -40,7 +40,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { setMetrics, setLoading, setError } from '../../store/slices/dashboardSlice';
 import { logout } from '../../store/slices/authSlice';
-import { fetchProfiles } from '../../store/slices/profileSlice';
 import { setSelectedProfile } from '../../store/slices/profilesSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -83,12 +82,7 @@ const DashboardPage: React.FC = () => {
     }, 1000);
   }, [dispatch]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(fetchProfiles());
-    }
-  }, [dispatch, isAuthenticated]);
-
+  
   const handleRefresh = () => {
     dispatch(setLoading(true));
     setTimeout(() => {
