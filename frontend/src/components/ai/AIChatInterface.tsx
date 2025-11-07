@@ -24,8 +24,7 @@ import {
   HealthAndSafety as HealthIcon,
   Science as ScienceIcon,
 } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { useAppSelector } from '../../store';
 
 interface Message {
   id: string;
@@ -53,7 +52,7 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({ profileId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { user, selectedProfile } = useSelector((state: RootState) => state.auth);
+  const { user, selectedProfile } = useAppSelector((state) => state.auth);
 
   const currentProfileId = profileId || selectedProfile?.id;
 

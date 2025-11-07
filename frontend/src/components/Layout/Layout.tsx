@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
   Box,
@@ -45,7 +45,8 @@ import {
   Group as GroupIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAppSelector } from '../../store/index';
+import { useAppSelector, useAppDispatch } from '../../store/index';
+import { setSelectedProfile } from '../../store/slices/authSlice';
 import ThemeSelector from '../ThemeSelector';
 
 const drawerWidth = 240;
@@ -78,8 +79,9 @@ const Layout: React.FC = () => {
   const [profileMenuAnchor, setProfileMenuAnchor] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const { sidebarOpen } = useAppSelector((state) => state.ui);
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, selectedProfile } = useAppSelector((state) => state.auth);
 
   // Mock profiles data - in real app this would come from API/store
   const [profiles] = useState<Profile[]>([
@@ -112,10 +114,15 @@ const Layout: React.FC = () => {
     },
   ]);
 
-  const [selectedProfile, setSelectedProfile] = useState<Profile>(profiles[0]);
-
   const isExpanded = sidebarOpen || isHovering;
   const isProfileMenuOpen = Boolean(profileMenuAnchor);
+
+  // Initialize selected profile if not set in Redux
+  useEffect(() => {
+    if (!selectedProfile && profiles.length > 0) {
+      dispatch(setSelectedProfile(profiles[0]));
+    }
+  }, [selectedProfile, profiles, dispatch]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -141,7 +148,7 @@ const Layout: React.FC = () => {
   };
 
   const handleProfileSelect = (profile: Profile) => {
-    setSelectedProfile(profile);
+    dispatch(setSelectedProfile(profile));
     setProfileMenuAnchor(null);
   };
 
@@ -375,7 +382,7 @@ const Layout: React.FC = () => {
                         fontWeight: 600,
                       }}
                     >
-                      {selectedProfile.name.charAt(0).toUpperCase()}
+                      {selectedProfile?.name?.charAt(0).toUpperCase() || 'U'}
                     </Avatar>
                   }
                   endIcon={<ExpandMoreIcon sx={{ fontSize: '1rem' }} />}
@@ -388,10 +395,10 @@ const Layout: React.FC = () => {
                         lineHeight: 1.2,
                       }}
                     >
-                      {selectedProfile.name}
+                      {selectedProfile?.name || 'Select Profile'}
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 400, opacity: 0.8 }}>
-                      {selectedProfile.bloodType} • {selectedProfile.gender}
+                      {selectedProfile?.bloodType || '--'} • {selectedProfile?.gender || '--'}
                     </Typography>
                   </Box>
                 </Button>
@@ -445,10 +452,10 @@ const Layout: React.FC = () => {
                       width: 40,
                       height: 40,
                       mr: 2,
-                      background: selectedProfile.id === profile.id
+                      background: selectedProfile?.id === profile.id
                         ? 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)'
                         : alpha('#64748b', 0.1),
-                      color: selectedProfile.id === profile.id ? 'white' : '#64748b',
+                      color: selectedProfile?.id === profile.id ? 'white' : '#64748b',
                       fontSize: '0.875rem',
                       fontWeight: 600,
                     }}
@@ -463,7 +470,7 @@ const Layout: React.FC = () => {
                       {profile.bloodType} • {profile.gender} • {profile.dateOfBirth}
                     </Typography>
                   </Box>
-                  {selectedProfile.id === profile.id && (
+                  {selectedProfile?.id === profile.id && (
                     <Box sx={{ color: '#2563eb' }}>
                       <PersonIcon sx={{ fontSize: 20 }} />
                     </Box>

@@ -13,20 +13,24 @@ import { Navigate } from 'react-router-dom';
 
 import AIChatInterface from '../components/ai/AIChatInterface';
 import AIHealthInsights from '../components/ai/AIHealthInsights';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { useAppSelector } from '../store';
 
 const AIChatPage: React.FC = () => {
-  const { user, selectedProfile } = useSelector((state: RootState) => state.auth);
+  const { user, selectedProfile } = useAppSelector((state) => state.auth);
 
   // Show message if no profile is selected
   if (!selectedProfile) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-          <RouterLink color="inherit" to="/dashboard" style={{ textDecoration: 'none' }}>
+          <Typography
+            component={RouterLink}
+            color="inherit"
+            to="/dashboard"
+            style={{ textDecoration: 'none' }}
+          >
             Dashboard
-          </RouterLink>
+          </Typography>
           <Typography color="text.primary">AI Health Assistant</Typography>
         </Breadcrumbs>
 
@@ -41,11 +45,15 @@ const AIChatPage: React.FC = () => {
             Select or create a health profile from the dashboard
           </Typography>
           <Box sx={{ mt: 3 }}>
-            <RouterLink to="/dashboard" style={{ textDecoration: 'none' }}>
-              <Typography variant="body2" color="primary" sx={{ cursor: 'pointer', fontWeight: 'bold' }}>
-                → Go to Dashboard to Select Profile
-              </Typography>
-            </RouterLink>
+            <Typography
+              component={RouterLink}
+              to="/dashboard"
+              variant="body2"
+              color="primary"
+              sx={{ cursor: 'pointer', fontWeight: 'bold', textDecoration: 'none' }}
+            >
+              → Go to Dashboard to Select Profile
+            </Typography>
           </Box>
         </Paper>
       </Container>
@@ -55,9 +63,14 @@ const AIChatPage: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-        <RouterLink color="inherit" to="/dashboard" style={{ textDecoration: 'none' }}>
+        <Typography
+          component={RouterLink}
+          color="inherit"
+          to="/dashboard"
+          style={{ textDecoration: 'none' }}
+        >
           Dashboard
-        </RouterLink>
+        </Typography>
         <Typography color="text.primary">AI Health Assistant</Typography>
       </Breadcrumbs>
 

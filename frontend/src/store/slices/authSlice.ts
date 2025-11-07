@@ -12,8 +12,20 @@ interface User {
   created_at: string;
 }
 
+interface Profile {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: string;
+  bloodType: string;
+  avatar?: string;
+}
+
 interface AuthState {
   user: User | null;
+  selectedProfile: Profile | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
@@ -23,6 +35,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
+  selectedProfile: null,
   accessToken: localStorage.getItem('accessToken'),
   refreshToken: localStorage.getItem('refreshToken'),
   isAuthenticated: !!localStorage.getItem('accessToken'),
@@ -133,6 +146,7 @@ const authSlice = createSlice({
     },
     clearCredentials: (state) => {
       state.user = null;
+      state.selectedProfile = null;
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
@@ -141,6 +155,9 @@ const authSlice = createSlice({
       // Remove tokens from localStorage
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+    },
+    setSelectedProfile: (state, action: PayloadAction<Profile | null>) => {
+      state.selectedProfile = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -254,6 +271,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, setCredentials, clearCredentials } =
+export const { clearError, setCredentials, clearCredentials, setSelectedProfile } =
   authSlice.actions;
 export default authSlice.reducer;
