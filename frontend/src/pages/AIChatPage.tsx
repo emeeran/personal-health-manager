@@ -12,7 +12,6 @@ import {
 import { Navigate } from 'react-router-dom';
 
 import AIChatInterface from '../components/ai/AIChatInterface';
-import AIHealthInsights from '../components/ai/AIHealthInsights';
 import { useAppSelector } from '../store';
 
 const AIChatPage: React.FC = () => {
@@ -91,46 +90,9 @@ const AIChatPage: React.FC = () => {
       </Alert>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} lg={8}>
-          <Paper sx={{ height: 600 }}>
+        <Grid item xs={12}>
+          <Box sx={{ height: 600, borderRadius: 3, overflow: 'hidden', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)' }}>
             <AIChatInterface profileId={selectedProfile.id} />
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} lg={4}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <AIHealthInsights profileId={selectedProfile.id} />
-
-            <Paper sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                Quick Tips
-              </Typography>
-              <Box component="ul" sx={{ pl: 2, m: 0 }}>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  Ask about medication interactions or side effects
-                </Typography>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  Request explanations for lab results
-                </Typography>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  Get general health information and wellness tips
-                </Typography>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  Understand preparation for medical appointments
-                </Typography>
-              </Box>
-            </Paper>
-
-            <Paper sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                Disclaimer
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                The AI assistant provides general health information and educational content.
-                It cannot diagnose conditions, prescribe treatments, or replace professional medical advice.
-                Always consult with qualified healthcare providers for medical decisions and treatment.
-              </Typography>
-            </Paper>
           </Box>
         </Grid>
       </Grid>

@@ -20,6 +20,7 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
+import AIHealthInsights from '../../components/ai/AIHealthInsights';
 import {
   Refresh as RefreshIcon,
   Edit as EditIcon,
@@ -582,154 +583,147 @@ const DashboardPage: React.FC = () => {
               </Grid>
             </Grid>
 
-            {/* Enhanced Upcoming Appointments & Recent Activity */}
+            {/* Enhanced Main Content Area with AI Insights */}
             <Grid container spacing={3} mb={3}>
-              <Grid item xs={12} md={6}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                    border: '1px solid #e2e8f0',
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)',
-                    },
-                  }}
-                >
-                  <CardContent sx={{ p: 3 }}>
-                    <Box display="flex" alignItems="center" gap={1} mb={3}>
-                      <Box
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 2,
-                          background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'white',
-                        }}
-                      >
-                        <EventIcon sx={{ fontSize: 20 }} />
-                      </Box>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: 600,
-                          background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                          backgroundClip: 'text',
-                        }}
-                      >
-                        Upcoming Appointments
-                      </Typography>
-                    </Box>
-                    {metrics.upcomingAppointments.map((appointment: any, index: number) => (
-                      <Box
-                        key={appointment.id}
-                        sx={{
-                          py: 2,
-                          px: 2,
-                          mb: 1,
-                          borderRadius: 2,
-                          background: index % 2 === 0 ? 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                          border: '1px solid #f1f5f9',
-                          transition: 'all 0.2s ease-in-out',
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
-                            transform: 'translateX(4px)',
-                          },
-                        }}
-                      >
-                        <Typography variant="body1" fontWeight={600} color="primary.main" mb={0.5}>
-                          {appointment.type}
-                        </Typography>
-                        <Typography variant="body2" fontWeight={500} color="text.primary" mb={0.5}>
-                          {appointment.doctor}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {appointment.date}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </CardContent>
-                </Card>
+              {/* AI Health Insights - Takes up 2/3 of the space */}
+              <Grid item xs={12} lg={8}>
+                <AIHealthInsights profileId={selectedProfile?.id} />
               </Grid>
 
-              <Grid item xs={12} md={6}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                    border: '1px solid #e2e8f0',
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)',
-                    },
-                  }}
-                >
-                  <CardContent sx={{ p: 3 }}>
-                    <Box display="flex" alignItems="center" gap={1} mb={3}>
-                      <Box
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 2,
-                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'white',
-                        }}
-                      >
-                        <TimelineIcon sx={{ fontSize: 20 }} />
-                      </Box>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: 600,
-                          background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                          backgroundClip: 'text',
-                        }}
-                      >
-                        Recent Activity
-                      </Typography>
-                    </Box>
-                    {metrics.recentActivity.map((activity: any, index: number) => (
-                      <Box
-                        key={activity.id}
-                        sx={{
-                          py: 2,
-                          px: 2,
-                          mb: 1,
-                          borderRadius: 2,
-                          background: index % 2 === 0 ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                          border: '1px solid #dcfce7',
-                          transition: 'all 0.2s ease-in-out',
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
-                            transform: 'translateX(4px)',
-                          },
-                        }}
-                      >
-                        <Typography variant="body2" fontWeight={600} color="success.main" mb={0.5}>
-                          {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
-                        </Typography>
-                        <Typography variant="body2" fontWeight={500} color="text.primary" mb={0.5}>
-                          {activity.description}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {activity.date}
+              {/* Compact Activity & Appointments - Takes up 1/3 of the space */}
+              <Grid item xs={12} lg={4}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {/* Upcoming Appointments */}
+                  <Card
+                    sx={{
+                      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                      border: '1px solid #e2e8f0',
+                      transition: 'all 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)',
+                      },
+                    }}
+                  >
+                    <CardContent sx={{ p: 2 }}>
+                      <Box display="flex" alignItems="center" gap={1} mb={2}>
+                        <Box
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 2,
+                            background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                          }}
+                        >
+                          <EventIcon sx={{ fontSize: 16 }} />
+                        </Box>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{
+                            fontWeight: 600,
+                            background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                          }}
+                        >
+                          Upcoming
                         </Typography>
                       </Box>
-                    ))}
-                  </CardContent>
-                </Card>
+                      {metrics.upcomingAppointments.slice(0, 2).map((appointment: any) => (
+                        <Box
+                          key={appointment.id}
+                          sx={{
+                            py: 1,
+                            px: 1,
+                            mb: 1,
+                            borderRadius: 1,
+                            background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                            border: '1px solid #f1f5f9',
+                          }}
+                        >
+                          <Typography variant="body2" fontWeight={600} color="primary.main" sx={{ fontSize: '0.85rem' }}>
+                            {appointment.type}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {appointment.doctor} • {appointment.date}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </CardContent>
+                  </Card>
+
+                  {/* Recent Activity */}
+                  <Card
+                    sx={{
+                      background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                      border: '1px solid #e2e8f0',
+                      transition: 'all 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)',
+                      },
+                    }}
+                  >
+                    <CardContent sx={{ p: 2 }}>
+                      <Box display="flex" alignItems="center" gap={1} mb={2}>
+                        <Box
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 2,
+                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                          }}
+                        >
+                          <TimelineIcon sx={{ fontSize: 16 }} />
+                        </Box>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{
+                            fontWeight: 600,
+                            background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                          }}
+                        >
+                          Recent Activity
+                        </Typography>
+                      </Box>
+                      {metrics.recentActivity.slice(0, 3).map((activity: any) => (
+                        <Box
+                          key={activity.id}
+                          sx={{
+                            py: 1,
+                            px: 1,
+                            mb: 1,
+                            borderRadius: 1,
+                            background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+                            border: '1px solid #dcfce7',
+                          }}
+                        >
+                          <Typography variant="caption" fontWeight={600} color="success.main">
+                            {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                            {activity.description}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {activity.date}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </Box>
               </Grid>
             </Grid>
 

@@ -8,13 +8,12 @@ import {
   Chip,
   CircularProgress,
   Alert,
-  List,
-  ListItem,
-  ListItemText,
+  Button,
   Divider,
-  Fab,
-  Tooltip,
 } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
   Send as SendIcon,
   SmartToy as BotIcon,
@@ -23,6 +22,7 @@ import {
   Psychology as PsychologyIcon,
   HealthAndSafety as HealthIcon,
   Science as ScienceIcon,
+  Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { useAppSelector } from '../../store';
 
@@ -56,12 +56,11 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({ profileId }) => {
 
   const currentProfileId = profileId || selectedProfile?.id;
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    // Scroll to bottom when messages change
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
   }, [messages]);
 
   const suggestedQuestions = [
@@ -171,136 +170,248 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({ profileId }) => {
   };
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {/* Header */}
-      <Paper sx={{ p: 2, mb: 2, bgcolor: 'primary.main', color: 'primary.contrastText' }}>
-        <Box display="flex" alignItems="center" gap={2}>
-          <PsychologyIcon />
-          <Box>
-            <Typography variant="h6" component="h2">
-              AI Health Assistant
-            </Typography>
-            <Typography variant="caption">
-              {currentProfileId ? `Profile: ${selectedProfile?.name || 'Active'}` : 'General Health Information'}
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
-
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#ffffff' }}>
       {/* Error Alert */}
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+        <Alert
+          severity="error"
+          sx={{
+            mx: 2,
+            mt: 1,
+            borderRadius: 1,
+          }}
+          onClose={() => setError(null)}
+        >
           {error}
         </Alert>
       )}
 
-      {/* Messages */}
-      <Paper sx={{ flexGrow: 1, mb: 2, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
-          <List>
-            {messages.map((message) => (
-              <ListItem
-                key={message.id}
+      {/* Messages Container - Scrollable Area */}
+      <Box
+        ref={messagesEndRef}
+        sx={{
+          flexGrow: 1,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          py: 2,
+          px: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          scrollBehavior: 'smooth',
+          '&::-webkit-scrollbar': {
+            width: '6px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: '#f1f1f1',
+            borderRadius: '3px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#c1c1c1',
+            borderRadius: '3px',
+            '&:hover': {
+              background: '#a8a8a8',
+            },
+          },
+        }}
+      >
+        {messages.map((message) => (
+          <Box
+            key={message.id}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: message.sender === 'user' ? 'flex-end' : 'flex-start',
+            }}
+          >
+            <Box
+              sx={{
+                maxWidth: '70%',
+                minWidth: '120px',
+              }}
+            >
+              {/* Simple Message Bubble */}
+              <Box
                 sx={{
-                  flexDirection: message.sender === 'user' ? 'row-reverse' : 'row',
-                  alignItems: 'flex-start',
-                  px: 1,
+                  px: 3,
+                  py: 2,
+                  borderRadius: 2,
+                  background: message.sender === 'user'
+                    ? '#3b82f6'
+                    : '#f3f4f6',
+                  color: message.sender === 'user' ? '#ffffff' : '#1f2937',
+                  wordBreak: 'break-word',
                 }}
               >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                    mb: 1,
-                    flexDirection: message.sender === 'user' ? 'row-reverse' : 'row',
-                  }}
-                >
-                  {message.sender === 'ai' ? (
-                    <BotIcon sx={{ color: 'primary.main' }} />
-                  ) : (
-                    <PersonIcon sx={{ color: 'secondary.main' }} />
-                  )}
-                  <Typography variant="caption" color="text.secondary">
-                    {message.timestamp.toLocaleTimeString()}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    maxWidth: '70%',
-                    bgcolor: message.sender === 'user' ? 'primary.main' : 'grey.100',
-                    color: message.sender === 'user' ? 'primary.contrastText' : 'text.primary',
-                    borderRadius: 2,
-                    p: 2,
-                  }}
-                >
-                  <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+                {message.sender === 'ai' ? (
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => (
+                        <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                          {children}
+                        </Typography>
+                      ),
+                      ul: ({ children }) => (
+                        <Box component="ul" sx={{ pl: 2, mb: 1 }}>
+                          {children}
+                        </Box>
+                      ),
+                      ol: ({ children }) => (
+                        <Box component="ol" sx={{ pl: 2, mb: 1 }}>
+                          {children}
+                        </Box>
+                      ),
+                      li: ({ children }) => (
+                        <Typography variant="body2" component="li" sx={{ lineHeight: 1.5 }}>
+                          {children}
+                        </Typography>
+                      ),
+                      strong: ({ children }) => (
+                        <Typography component="span" sx={{ fontWeight: 600 }}>
+                          {children}
+                        </Typography>
+                      ),
+                      em: ({ children }) => (
+                        <Typography component="span" sx={{ fontStyle: 'italic' }}>
+                          {children}
+                        </Typography>
+                      ),
+                      code: ({ inline, children }) => (
+                        <Typography
+                          component="span"
+                          sx={{
+                            fontFamily: 'monospace',
+                            bgcolor: 'rgba(0,0,0,0.1)',
+                            px: 0.5,
+                            py: 0.25,
+                            borderRadius: 0.25,
+                            fontSize: '0.85rem',
+                          }}
+                        >
+                          {children}
+                        </Typography>
+                      ),
+                      h1: ({ children }) => (
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, mt: 1 }}>
+                          {children}
+                        </Typography>
+                      ),
+                      h2: ({ children }) => (
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, mt: 1 }}>
+                          {children}
+                        </Typography>
+                      ),
+                      h3: ({ children }) => (
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5, mt: 1 }}>
+                          {children}
+                        </Typography>
+                      ),
+                    }}
+                  >
+                    {message.text}
+                  </ReactMarkdown>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      whiteSpace: 'pre-wrap',
+                      lineHeight: 1.5,
+                    }}
+                  >
                     {message.text}
                   </Typography>
-                </Box>
-              </ListItem>
-            ))}
-            {isLoading && (
-              <ListItem sx={{ justifyContent: 'center' }}>
-                <CircularProgress size={24} />
-              </ListItem>
-            )}
-          </List>
-          <div ref={messagesEndRef} />
-        </Box>
-      </Paper>
+                )}
+              </Box>
 
-      {/* Suggested Questions */}
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-          Suggested questions:
-        </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {suggestedQuestions.map((question, index) => (
-            <Chip
-              key={index}
-              label={question}
-              variant="outlined"
-              size="small"
-              clickable
-              onClick={() => handleSuggestedQuestion(question)}
-              sx={{ fontSize: '0.7rem' }}
-            />
-          ))}
-        </Box>
+              {/* Simple Timestamp */}
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  mt: 0.5,
+                  textAlign: message.sender === 'user' ? 'right' : 'left',
+                  fontSize: '0.7rem',
+                }}
+              >
+                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </Typography>
+            </Box>
+          </Box>
+        ))}
+
+        {/* Minimal Typing Indicator */}
+        {isLoading && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              sx={{
+                px: 3,
+                py: 2,
+                borderRadius: 2,
+                background: '#f3f4f6',
+                color: '#6b7280',
+              }}
+            >
+              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                AI is thinking...
+              </Typography>
+            </Box>
+          </Box>
+        )}
       </Box>
 
-      {/* Input */}
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
-        <TextField
-          fullWidth
-          multiline
-          maxRows={3}
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Ask me about your health..."
-          disabled={isLoading}
-          variant="outlined"
-          size="small"
-        />
-        <Tooltip title="Send message">
-          <Fab
-            color="primary"
+      {/* Clean Input Area - Pinned at Bottom */}
+      <Box
+        sx={{
+          p: 2,
+          borderTop: '1px solid #f3f4f6',
+          bgcolor: '#ffffff',
+          position: 'sticky',
+          bottom: 0,
+          zIndex: 1,
+        }}
+      >
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <TextField
+            fullWidth
+            variant="outlined"
             size="small"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Type your message..."
+            disabled={isLoading}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+                bgcolor: '#f9fafb',
+                '&:hover': {
+                  bgcolor: '#ffffff',
+                },
+                '&.Mui-focused': {
+                  bgcolor: '#ffffff',
+                  borderColor: '#3b82f6',
+                },
+              },
+            }}
+          />
+          <IconButton
             onClick={handleSendMessage}
             disabled={!inputText.trim() || isLoading}
+            sx={{
+              bgcolor: '#3b82f6',
+              color: 'white',
+              '&:hover': {
+                bgcolor: '#2563eb',
+              },
+              '&:disabled': {
+                bgcolor: '#e5e7eb',
+                color: '#9ca3af',
+              },
+            }}
           >
             <SendIcon />
-          </Fab>
-        </Tooltip>
-      </Box>
-
-      {/* Disclaimer */}
-      <Box sx={{ mt: 2, p: 1, bgcolor: 'grey.100', borderRadius: 1 }}>
-        <Typography variant="caption" color="text.secondary">
-          <strong>Disclaimer:</strong> This AI assistant provides general health information and is not a substitute for professional medical advice. Always consult with qualified healthcare providers for medical decisions and treatment.
-        </Typography>
+          </IconButton>
+        </Box>
       </Box>
     </Box>
   );
