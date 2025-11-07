@@ -15,6 +15,12 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
+  Badge,
+  Avatar,
+  Tooltip,
+  Paper,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -25,6 +31,12 @@ import {
   Psychology as AIIcon,
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  ArrowForwardIos as ArrowIcon,
+  Notifications as NotificationsIcon,
+  AccountCircle,
+  Settings,
+  Logout,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/index';
@@ -44,11 +56,15 @@ const Layout: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { sidebarOpen } = useAppSelector((state) => state.ui);
   const { user } = useAppSelector((state) => state.auth);
 
+  const isExpanded = sidebarOpen || isHovering;
+  const isUserMenuOpen = Boolean(userMenuAnchor);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -60,9 +76,41 @@ const Layout: React.FC = () => {
     }
   };
 
+  const handleDesktopSidebarToggle = () => {
+    // Add sidebar toggle logic here
+  };
+
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuAnchor(null);
+  };
+
+  const handleLogout = () => {
+    // Add logout logic here
+    setUserMenuAnchor(null);
+  };
+
+  // Temporary ThemeToggle component
+  const ThemeToggle = () => (
+    <IconButton size="small" sx={{ bgcolor: 'background.paper', boxShadow: 1 }}>
+      <Typography variant="body2">🌙</Typography>
+    </IconButton>
+  );
+
   const drawer = (
-    <div>
-      <Toolbar>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Toolbar
+        sx={{
+          px: isExpanded ? 2 : 1,
+          py: 1,
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 0.5,
+        }}
+      >
         <Typography variant="h6" noWrap component="div">
           PHM
         </Typography>
@@ -81,7 +129,31 @@ const Layout: React.FC = () => {
           </ListItem>
         ))}
       </List>
-    </div>
+      {/* Sidebar Toggle Button */}
+      <Box sx={{ p: isExpanded ? 2 : 1, mt: 'auto' }}>
+        <Tooltip title={sidebarOpen ? 'Collapse Sidebar' : 'Expand Sidebar'} placement="right" arrow>
+          <IconButton
+            onClick={handleDesktopSidebarToggle}
+            sx={{
+              width: isExpanded ? 36 : 40,
+              height: isExpanded ? 36 : 40,
+              bgcolor: 'background.paper',
+              border: 1,
+              borderColor: 'divider',
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+            }}
+          >
+            {sidebarOpen ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ArrowIcon sx={{ fontSize: '0.9rem' }} />
+            )}
+          </IconButton>
+        </Tooltip>
+      </Box>
+    </Box>
   );
 
   return (
@@ -107,15 +179,125 @@ const Layout: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Personal Health Manager
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            {user?.email}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
+            <Box>
+              <Typography
+                variant="h4"
+                noWrap
+                component="div"
+                sx={{
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  fontSize: '1.5rem',
+                  color: 'text.primary',
+                }}
+              >
+                Personal Health Manager
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ display: { xs: 'none', sm: 'block' } }}
+              >
+                Manage your health records and wellness journey
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Tooltip title="Notifications">
+              <IconButton
+                size="small"
+                sx={{
+                  bgcolor: 'background.paper',
+                  boxShadow: 1,
+                  '&:hover': {
+                    bgcolor: 'background.paper',
+                  }
+                }}
+              >
+                <Badge badgeContent={3} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+
+            <ThemeToggle />
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ textAlign: 'right', display: { xs: 'none', sm: 'block' } }}>
+                <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: 1.2 }}>
+                  {user?.first_name || user?.email?.split('@')[0] || 'User'}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {user?.email}
+                </Typography>
+              </Box>
+              <Tooltip title="User Menu">
+                <Avatar
+                  onClick={handleUserMenuClick}
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    bgcolor: 'secondary.main',
+                    cursor: 'pointer',
+                    border: '2px solid',
+                    borderColor: 'background.paper',
+                    boxShadow: 1,
+                    fontSize: '0.875rem',
+                    '&:hover': {
+                      boxShadow: 2,
+                    }
+                  }}
+                >
+                  {user?.first_name?.charAt(0).toUpperCase() ||
+                    user?.email?.charAt(0).toUpperCase() ||
+                    'U'}
+                </Avatar>
+              </Tooltip>
+            </Box>
+            <Menu
+              anchorEl={userMenuAnchor}
+              open={isUserMenuOpen}
+              onClose={handleUserMenuClose}
+              onClick={handleUserMenuClose}
+              PaperProps={{
+                elevation: 3,
+                sx: {
+                  overflow: 'visible',
+                  mt: 1.5,
+                  '& .MuiAvatar-root': {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+              <MenuItem onClick={handleUserMenuClose}>
+                <ListItemIcon>
+                  <AccountCircle fontSize="small" />
+                </ListItemIcon>
+                Profile
+              </MenuItem>
+              <MenuItem onClick={handleUserMenuClose}>
+                <ListItemIcon>
+                  <Settings fontSize="small" />
+                </ListItemIcon>
+                Settings
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
 
