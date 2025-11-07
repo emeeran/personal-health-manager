@@ -21,6 +21,9 @@ import {
   Paper,
   Menu,
   MenuItem,
+  Chip,
+  Button,
+  alpha,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -37,11 +40,26 @@ import {
   AccountCircle,
   Settings,
   Logout,
+  Person as PersonIcon,
+  ExpandMore as ExpandMoreIcon,
+  Group as GroupIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/index';
+import ThemeSelector from '../ThemeSelector';
 
 const drawerWidth = 240;
+
+interface Profile {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: string;
+  bloodType: string;
+  avatar?: string;
+}
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
@@ -57,14 +75,47 @@ const Layout: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+  const [profileMenuAnchor, setProfileMenuAnchor] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { sidebarOpen } = useAppSelector((state) => state.ui);
   const { user } = useAppSelector((state) => state.auth);
 
+  // Mock profiles data - in real app this would come from API/store
+  const [profiles] = useState<Profile[]>([
+    {
+      id: '1',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      phone: '+1 234 567 8900',
+      dateOfBirth: '1990-05-15',
+      gender: 'Male',
+      bloodType: 'O+',
+    },
+    {
+      id: '2',
+      name: 'Sarah Doe',
+      email: 'sarah.doe@example.com',
+      phone: '+1 234 567 8902',
+      dateOfBirth: '1985-08-22',
+      gender: 'Female',
+      bloodType: 'A+',
+    },
+    {
+      id: '3',
+      name: 'Emily Doe',
+      email: 'emily.doe@example.com',
+      phone: '+1 234 567 8903',
+      dateOfBirth: '2015-03-10',
+      gender: 'Female',
+      bloodType: 'B+',
+    },
+  ]);
+
+  const [selectedProfile, setSelectedProfile] = useState<Profile>(profiles[0]);
+
   const isExpanded = sidebarOpen || isHovering;
-  const isUserMenuOpen = Boolean(userMenuAnchor);
+  const isProfileMenuOpen = Boolean(profileMenuAnchor);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -81,78 +132,119 @@ const Layout: React.FC = () => {
     // Add sidebar toggle logic here
   };
 
-  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setUserMenuAnchor(event.currentTarget);
+  const handleProfileMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setProfileMenuAnchor(event.currentTarget);
   };
 
-  const handleUserMenuClose = () => {
-    setUserMenuAnchor(null);
+  const handleProfileMenuClose = () => {
+    setProfileMenuAnchor(null);
+  };
+
+  const handleProfileSelect = (profile: Profile) => {
+    setSelectedProfile(profile);
+    setProfileMenuAnchor(null);
   };
 
   const handleLogout = () => {
     // Add logout logic here
-    setUserMenuAnchor(null);
+    setProfileMenuAnchor(null);
   };
 
-  // Temporary ThemeToggle component
-  const ThemeToggle = () => (
-    <IconButton size="small" sx={{ bgcolor: 'background.paper', boxShadow: 1 }}>
-      <Typography variant="body2">🌙</Typography>
-    </IconButton>
-  );
-
+  
   const drawer = (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Toolbar
+      <Box
         sx={{
-          px: isExpanded ? 2 : 1,
-          py: 1,
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 0.5,
+          px: 2,
+          py: 2.5,
+          borderBottom: '1px solid #e2e8f0',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
         }}
       >
-        <Typography variant="h6" noWrap component="div">
-          PHM
-        </Typography>
-      </Toolbar>
-      <Divider />
-      <List>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box
+            sx={{
+              width: 40,
+              height: 40,
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: 700,
+              fontSize: '1rem',
+            }}
+          >
+            PH
+          </Box>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{
+              fontWeight: 700,
+              background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            Family Health
+          </Typography>
+        </Box>
+      </Box>
+      <Box sx={{ flexGrow: 1, py: 2 }}>
         {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding>
+          <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
             <ListItemButton
               selected={location.pathname === item.path}
               onClick={() => handleNavigation(item.path)}
+              sx={{
+                mx: 1,
+                borderRadius: 2,
+                minHeight: 48,
+                transition: 'all 0.2s ease-in-out',
+              }}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+              <ListItemIcon
+                sx={{
+                  color: location.pathname === item.path ? '#2563eb' : '#64748b',
+                  minWidth: 40,
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.text}
+                sx={{
+                  '& .MuiListItemText-primary': {
+                    fontWeight: location.pathname === item.path ? 600 : 500,
+                    fontSize: '0.875rem',
+                  },
+                }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
-      </List>
-      {/* Sidebar Toggle Button */}
-      <Box sx={{ p: isExpanded ? 2 : 1, mt: 'auto' }}>
-        <Tooltip title={sidebarOpen ? 'Collapse Sidebar' : 'Expand Sidebar'} placement="right" arrow>
-          <IconButton
-            onClick={handleDesktopSidebarToggle}
-            sx={{
-              width: isExpanded ? 36 : 40,
-              height: isExpanded ? 36 : 40,
-              bgcolor: 'background.paper',
-              border: 1,
-              borderColor: 'divider',
-              '&:hover': {
-                bgcolor: 'action.hover',
-              },
-            }}
-          >
-            {sidebarOpen ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ArrowIcon sx={{ fontSize: '0.9rem' }} />
-            )}
-          </IconButton>
-        </Tooltip>
+      </Box>
+      {/* Bottom Section with Status */}
+      <Box sx={{ p: 2, borderTop: '1px solid #e2e8f0' }}>
+        <Chip
+          label="Connected"
+          size="small"
+          sx={{
+            bgcolor: alpha('#10b981', 0.1),
+            color: '#059669',
+            fontWeight: 500,
+            fontSize: '0.75rem',
+            width: '100%',
+            '& .MuiChip-label': {
+              width: '100%',
+              textAlign: 'center',
+            },
+          }}
+        />
       </Box>
     </Box>
   );
@@ -168,19 +260,29 @@ const Layout: React.FC = () => {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
           }),
+          background: 'linear-gradient(90deg, #ffffff 0%, #f8fafc 100%)',
+          backdropFilter: 'blur(8px)',
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ minHeight: 72 }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: 'none' } }}
+            sx={{
+              mr: 2,
+              display: { md: 'none' },
+              bgcolor: alpha('#2563eb', 0.08),
+              color: '#2563eb',
+              '&:hover': {
+                bgcolor: alpha('#2563eb', 0.12),
+              }
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexGrow: 1 }}>
             <Box>
               <Typography
                 variant="h4"
@@ -190,112 +292,212 @@ const Layout: React.FC = () => {
                   fontWeight: 700,
                   lineHeight: 1.2,
                   fontSize: '1.5rem',
-                  color: 'text.primary',
+                  background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
                 }}
               >
-                Personal Health Manager
+                Family Health Manager
               </Typography>
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ display: { xs: 'none', sm: 'block' } }}
+                sx={{
+                  display: { xs: 'none', sm: 'block' },
+                  fontWeight: 400,
+                }}
               >
-                Manage your health records and wellness journey
+                Manage your family's health records and wellness journey
               </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Tooltip title="Notifications">
               <IconButton
                 size="small"
                 sx={{
-                  bgcolor: 'background.paper',
-                  boxShadow: 1,
+                  bgcolor: alpha('#2563eb', 0.06),
+                  color: '#2563eb',
+                  border: '1px solid #e2e8f0',
+                  transition: 'all 0.2s ease-in-out',
                   '&:hover': {
-                    bgcolor: 'background.paper',
+                    bgcolor: alpha('#2563eb', 0.1),
+                    transform: 'scale(1.05)',
                   }
                 }}
               >
-                <Badge badgeContent={3} color="error">
-                  <NotificationsIcon />
+                <Badge
+                  badgeContent={3}
+                  color="error"
+                  sx={{
+                    '& .MuiBadge-badge': {
+                      fontSize: '0.6rem',
+                      height: 16,
+                      minWidth: 16,
+                    }
+                  }}
+                >
+                  <NotificationsIcon sx={{ fontSize: '1.25rem' }} />
                 </Badge>
               </IconButton>
             </Tooltip>
 
-            <ThemeToggle />
+            <ThemeSelector />
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ textAlign: 'right', display: { xs: 'none', sm: 'block' } }}>
-                <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: 1.2 }}>
-                  {user?.first_name || user?.email?.split('@')[0] || 'User'}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {user?.email}
-                </Typography>
-              </Box>
-              <Tooltip title="User Menu">
-                <Avatar
-                  onClick={handleUserMenuClick}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Tooltip title="Profile Menu">
+                <Button
+                  onClick={handleProfileMenuClick}
                   sx={{
-                    width: 36,
-                    height: 36,
-                    bgcolor: 'secondary.main',
-                    cursor: 'pointer',
-                    border: '2px solid',
-                    borderColor: 'background.paper',
-                    boxShadow: 1,
-                    fontSize: '0.875rem',
+                    borderRadius: 2,
+                    px: 2,
+                    py: 1,
+                    minHeight: 'auto',
+                    textTransform: 'none',
+                    bgcolor: alpha('#2563eb', 0.04),
+                    color: '#1e293b',
+                    border: '1px solid #e2e8f0',
+                    transition: 'all 0.2s ease-in-out',
                     '&:hover': {
-                      boxShadow: 2,
+                      bgcolor: alpha('#2563eb', 0.08),
+                      transform: 'scale(1.02)',
                     }
                   }}
+                  startIcon={
+                    <Avatar
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {selectedProfile.name.charAt(0).toUpperCase()}
+                    </Avatar>
+                  }
+                  endIcon={<ExpandMoreIcon sx={{ fontSize: '1rem' }} />}
                 >
-                  {user?.first_name?.charAt(0).toUpperCase() ||
-                    user?.email?.charAt(0).toUpperCase() ||
-                    'U'}
-                </Avatar>
+                  <Box sx={{ textAlign: 'left', display: { xs: 'none', sm: 'block' } }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontWeight: 600,
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {selectedProfile.name}
+                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 400, opacity: 0.8 }}>
+                      {selectedProfile.bloodType} • {selectedProfile.gender}
+                    </Typography>
+                  </Box>
+                </Button>
               </Tooltip>
             </Box>
             <Menu
-              anchorEl={userMenuAnchor}
-              open={isUserMenuOpen}
-              onClose={handleUserMenuClose}
-              onClick={handleUserMenuClose}
+              anchorEl={profileMenuAnchor}
+              open={isProfileMenuOpen}
+              onClose={handleProfileMenuClose}
+              onClick={handleProfileMenuClose}
               PaperProps={{
-                elevation: 3,
+                elevation: 0,
                 sx: {
                   overflow: 'visible',
                   mt: 1.5,
-                  '& .MuiAvatar-root': {
-                    width: 32,
-                    height: 32,
-                    ml: -0.5,
-                    mr: 1,
-                  },
+                  minWidth: 280,
+                  maxWidth: 320,
+                  borderRadius: 2,
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0px 10px 40px rgba(0, 0, 0, 0.12)',
                 },
               }}
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem onClick={handleUserMenuClose}>
-                <ListItemIcon>
-                  <AccountCircle fontSize="small" />
+              {/* Profile Selector Header */}
+              <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid #e2e8f0' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#1e293b' }}>
+                  Switch Profile
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Select a family member profile
+                </Typography>
+              </Box>
+
+              {/* Profile List */}
+              {profiles.map((profile) => (
+                <MenuItem
+                  key={profile.id}
+                  onClick={() => handleProfileSelect(profile)}
+                  sx={{
+                    py: 1.5,
+                    px: 2,
+                    '&:hover': {
+                      bgcolor: alpha('#2563eb', 0.06),
+                    },
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      mr: 2,
+                      background: selectedProfile.id === profile.id
+                        ? 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)'
+                        : alpha('#64748b', 0.1),
+                      color: selectedProfile.id === profile.id ? 'white' : '#64748b',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {profile.name.charAt(0).toUpperCase()}
+                  </Avatar>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: '#1e293b' }}>
+                      {profile.name}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {profile.bloodType} • {profile.gender} • {profile.dateOfBirth}
+                    </Typography>
+                  </Box>
+                  {selectedProfile.id === profile.id && (
+                    <Box sx={{ color: '#2563eb' }}>
+                      <PersonIcon sx={{ fontSize: 20 }} />
+                    </Box>
+                  )}
+                </MenuItem>
+              ))}
+
+              <Divider sx={{ my: 1, borderColor: '#e2e8f0' }} />
+
+              {/* Menu Actions */}
+              <MenuItem onClick={() => { navigate('/profiles'); handleProfileMenuClose(); }}>
+                <ListItemIcon sx={{ color: '#64748b' }}>
+                  <GroupIcon fontSize="small" />
                 </ListItemIcon>
-                Profile
+                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  Manage Profiles
+                </Typography>
               </MenuItem>
-              <MenuItem onClick={handleUserMenuClose}>
-                <ListItemIcon>
+              <MenuItem onClick={() => { handleProfileMenuClose(); }}>
+                <ListItemIcon sx={{ color: '#64748b' }}>
                   <Settings fontSize="small" />
                 </ListItemIcon>
-                Settings
+                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  Settings
+                </Typography>
               </MenuItem>
-              <Divider />
+              <Divider sx={{ my: 1, borderColor: '#e2e8f0' }} />
               <MenuItem onClick={handleLogout}>
-                <ListItemIcon>
+                <ListItemIcon sx={{ color: '#ef4444' }}>
                   <Logout fontSize="small" />
                 </ListItemIcon>
-                Logout
+                <Typography variant="body2" sx={{ fontWeight: 500, color: '#ef4444' }}>
+                  Logout
+                </Typography>
               </MenuItem>
             </Menu>
           </Box>
@@ -346,7 +548,8 @@ const Layout: React.FC = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
           width: { md: `calc(100% - ${sidebarOpen ? drawerWidth : 0}px)` },
           transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
@@ -354,8 +557,10 @@ const Layout: React.FC = () => {
           }),
         }}
       >
-        <Toolbar />
-        <Outlet />
+        <Toolbar sx={{ minHeight: 72 }} />
+        <Box sx={{ p: 3 }}>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

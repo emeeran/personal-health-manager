@@ -188,16 +188,31 @@ const DashboardPage: React.FC = () => {
       <Helmet>
         <title>Health Dashboard - Personal Health Manager</title>
       </Helmet>
-      <Box sx={{ flexGrow: 1, p: 3 }}>
-        {/* Header */}
+      <Box sx={{ flexGrow: 1, maxWidth: '1400px', mx: 'auto' }}>
+        {/* Modern Header */}
         <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={3}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 4,
+            flexWrap: 'wrap',
+            gap: 2,
+          }}
         >
           <Box>
-            <Typography variant="h4" component="h1">
+            <Typography
+              variant="h4"
+              component="h1"
+              sx={{
+                fontWeight: 700,
+                background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                mb: 0.5,
+              }}
+            >
               Health Dashboard
             </Typography>
             {/* Profile Selector */}
@@ -332,18 +347,58 @@ const DashboardPage: React.FC = () => {
               </Paper>
             </Box>
 
-            {/* Metrics Overview */}
-            <Grid container spacing={3} mb={3}>
+            {/* Modern Metrics Overview */}
+            <Grid container spacing={3} mb={4}>
               <Grid item xs={12} sm={6} md={3}>
-                <Card>
-                  <CardContent>
+                <Card
+                  sx={{
+                    height: '100%',
+                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                    border: '1px solid #e2e8f0',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.15)',
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
                     <Box display="flex" alignItems="center" gap={2}>
-                      <MedicalServicesIcon color="primary" sx={{ fontSize: 40 }} />
+                      <Box
+                        sx={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 2,
+                          background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                        }}
+                      >
+                        <MedicalServicesIcon sx={{ fontSize: 28 }} />
+                      </Box>
                       <Box>
-                        <Typography variant="h4" color="primary">
+                        <Typography
+                          variant="h4"
+                          sx={{
+                            fontWeight: 700,
+                            background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            mb: 0.5,
+                          }}
+                        >
                           {metrics.totalVisits}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: '#64748b',
+                            fontWeight: 500,
+                          }}
+                        >
                           Total Visits
                         </Typography>
                       </Box>
@@ -353,15 +408,55 @@ const DashboardPage: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <Card>
-                  <CardContent>
+                <Card
+                  sx={{
+                    height: '100%',
+                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                    border: '1px solid #e2e8f0',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.15)',
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
                     <Box display="flex" alignItems="center" gap={2}>
-                      <AssessmentIcon color="secondary" sx={{ fontSize: 40 }} />
+                      <Box
+                        sx={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 2,
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                        }}
+                      >
+                        <AssessmentIcon sx={{ fontSize: 28 }} />
+                      </Box>
                       <Box>
-                        <Typography variant="h4" color="secondary">
+                        <Typography
+                          variant="h4"
+                          sx={{
+                            fontWeight: 700,
+                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            mb: 0.5,
+                          }}
+                        >
                           {metrics.activeMedications}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: '#64748b',
+                            fontWeight: 500,
+                          }}
+                        >
                           Active Medications
                         </Typography>
                       </Box>
@@ -371,15 +466,55 @@ const DashboardPage: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <Card>
-                  <CardContent>
+                <Card
+                  sx={{
+                    height: '100%',
+                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                    border: '1px solid #e2e8f0',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.15)',
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
                     <Box display="flex" alignItems="center" gap={2}>
-                      <DescriptionIcon color="success" sx={{ fontSize: 40 }} />
+                      <Box
+                        sx={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 2,
+                          background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                        }}
+                      >
+                        <DescriptionIcon sx={{ fontSize: 28 }} />
+                      </Box>
                       <Box>
-                        <Typography variant="h4" color="success.main">
+                        <Typography
+                          variant="h4"
+                          sx={{
+                            fontWeight: 700,
+                            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            mb: 0.5,
+                          }}
+                        >
                           {metrics.totalDocuments}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: '#64748b',
+                            fontWeight: 500,
+                          }}
+                        >
                           Documents
                         </Typography>
                       </Box>
@@ -389,15 +524,55 @@ const DashboardPage: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <Card>
-                  <CardContent>
+                <Card
+                  sx={{
+                    height: '100%',
+                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                    border: '1px solid #e2e8f0',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.15)',
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
                     <Box display="flex" alignItems="center" gap={2}>
-                      <EventIcon color="warning" sx={{ fontSize: 40 }} />
+                      <Box
+                        sx={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 2,
+                          background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                        }}
+                      >
+                        <EventIcon sx={{ fontSize: 28 }} />
+                      </Box>
                       <Box>
-                        <Typography variant="h4" color="warning.main">
+                        <Typography
+                          variant="h4"
+                          sx={{
+                            fontWeight: 700,
+                            background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            mb: 0.5,
+                          }}
+                        >
                           {metrics.upcomingAppointments.length}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: '#64748b',
+                            fontWeight: 500,
+                          }}
+                        >
                           Upcoming Appointments
                         </Typography>
                       </Box>
@@ -407,68 +582,262 @@ const DashboardPage: React.FC = () => {
               </Grid>
             </Grid>
 
-            {/* Upcoming Appointments */}
+            {/* Enhanced Upcoming Appointments & Recent Activity */}
             <Grid container spacing={3} mb={3}>
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 3 }}>
-                  <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-                    <EventIcon />
-                    Upcoming Appointments
-                  </Typography>
-                  {metrics.upcomingAppointments.map((appointment: any) => (
-                    <Box key={appointment.id} sx={{ py: 1, borderBottom: 1, borderColor: 'divider' }}>
-                      <Typography variant="body1" fontWeight="medium">
-                        {appointment.type} - {appointment.doctor}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {appointment.date}
+                <Card
+                  sx={{
+                    height: '100%',
+                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                    border: '1px solid #e2e8f0',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)',
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
+                    <Box display="flex" alignItems="center" gap={1} mb={3}>
+                      <Box
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 2,
+                          background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                        }}
+                      >
+                        <EventIcon sx={{ fontSize: 20 }} />
+                      </Box>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text',
+                        }}
+                      >
+                        Upcoming Appointments
                       </Typography>
                     </Box>
-                  ))}
-                </Paper>
+                    {metrics.upcomingAppointments.map((appointment: any, index: number) => (
+                      <Box
+                        key={appointment.id}
+                        sx={{
+                          py: 2,
+                          px: 2,
+                          mb: 1,
+                          borderRadius: 2,
+                          background: index % 2 === 0 ? 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                          border: '1px solid #f1f5f9',
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+                            transform: 'translateX(4px)',
+                          },
+                        }}
+                      >
+                        <Typography variant="body1" fontWeight={600} color="primary.main" mb={0.5}>
+                          {appointment.type}
+                        </Typography>
+                        <Typography variant="body2" fontWeight={500} color="text.primary" mb={0.5}>
+                          {appointment.doctor}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {appointment.date}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </CardContent>
+                </Card>
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 3 }}>
-                  <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-                    <TimelineIcon />
-                    Recent Activity
-                  </Typography>
-                  {metrics.recentActivity.map((activity: any) => (
-                    <Box key={activity.id} sx={{ py: 1, borderBottom: 1, borderColor: 'divider' }}>
-                      <Typography variant="body1" fontWeight="medium">
-                        {activity.description}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {activity.date}
+                <Card
+                  sx={{
+                    height: '100%',
+                    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                    border: '1px solid #e2e8f0',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)',
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
+                    <Box display="flex" alignItems="center" gap={1} mb={3}>
+                      <Box
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 2,
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                        }}
+                      >
+                        <TimelineIcon sx={{ fontSize: 20 }} />
+                      </Box>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text',
+                        }}
+                      >
+                        Recent Activity
                       </Typography>
                     </Box>
-                  ))}
-                </Paper>
+                    {metrics.recentActivity.map((activity: any, index: number) => (
+                      <Box
+                        key={activity.id}
+                        sx={{
+                          py: 2,
+                          px: 2,
+                          mb: 1,
+                          borderRadius: 2,
+                          background: index % 2 === 0 ? 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                          border: '1px solid #dcfce7',
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+                            transform: 'translateX(4px)',
+                          },
+                        }}
+                      >
+                        <Typography variant="body2" fontWeight={600} color="success.main" mb={0.5}>
+                          {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
+                        </Typography>
+                        <Typography variant="body2" fontWeight={500} color="text.primary" mb={0.5}>
+                          {activity.description}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {activity.date}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </CardContent>
+                </Card>
               </Grid>
             </Grid>
 
-            {/* HbA1c Trends */}
-            <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-                <AssessmentIcon />
-                HbA1c Trends
-              </Typography>
-              <Box display="flex" gap={2} overflow="auto">
-                {metrics.hba1c.map((reading: any, index: number) => (
-                  <Box key={index} textAlign="center" minWidth={80}>
-                    <Paper sx={{ p: 2, bgcolor: reading.value < 7 ? 'success.light' : 'warning.light' }}>
-                      <Typography variant="h6" color={reading.value < 7 ? 'success.dark' : 'warning.dark'}>
-                        {reading.value}%
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {reading.date}
-                      </Typography>
-                    </Paper>
+            {/* Enhanced HbA1c Trends */}
+            <Card
+              sx={{
+                mb: 3,
+                background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+                border: '1px solid #e2e8f0',
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)',
+                },
+              }}
+            >
+              <CardContent sx={{ p: 3 }}>
+                <Box display="flex" alignItems="center" gap={1} mb={3}>
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 2,
+                      background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                    }}
+                  >
+                    <AssessmentIcon sx={{ fontSize: 20 }} />
                   </Box>
-                ))}
-              </Box>
-            </Paper>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 600,
+                      background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}
+                  >
+                    HbA1c Trends
+                  </Typography>
+                </Box>
+                <Box display="flex" gap={2} overflow="auto" sx={{ pt: 1 }}>
+                  {metrics.hba1c.map((reading: any, index: number) => (
+                    <Box
+                      key={index}
+                      textAlign="center"
+                      minWidth={100}
+                      sx={{
+                        animation: `slideIn 0.5s ease-out ${index * 0.1}s both`,
+                        '@keyframes slideIn': {
+                          from: {
+                            opacity: 0,
+                            transform: 'translateX(-20px)',
+                          },
+                          to: {
+                            opacity: 1,
+                            transform: 'translateX(0)',
+                          },
+                        },
+                      }}
+                    >
+                      <Card
+                        sx={{
+                          p: 2,
+                          background: reading.value < 7
+                            ? 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)'
+                            : 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+                          border: reading.value < 7
+                            ? '1px solid #86efac'
+                            : '1px solid #fcd34d',
+                          transition: 'all 0.3s ease-in-out',
+                          '&:hover': {
+                            transform: 'translateY(-4px) scale(1.05)',
+                            boxShadow: reading.value < 7
+                              ? '0px 8px 20px rgba(34, 197, 94, 0.3)'
+                              : '0px 8px 20px rgba(245, 158, 11, 0.3)',
+                          },
+                        }}
+                      >
+                        <Typography
+                          variant="h5"
+                          sx={{
+                            fontWeight: 700,
+                            color: reading.value < 7 ? '#166534' : '#92400e',
+                            mb: 0.5,
+                          }}
+                        >
+                          {reading.value}%
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: reading.value < 7 ? '#15803d' : '#b45309',
+                            fontWeight: 500,
+                          }}
+                        >
+                          {reading.date}
+                        </Typography>
+                      </Card>
+                    </Box>
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
           </>
         )}
 

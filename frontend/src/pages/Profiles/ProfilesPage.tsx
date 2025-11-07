@@ -204,7 +204,7 @@ const ProfilesPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Health Profiles - Personal Health Manager</title>
+        <title>Health Profiles - Family Health Manager</title>
       </Helmet>
       <Container maxWidth="xl" sx={{ py: 3 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
