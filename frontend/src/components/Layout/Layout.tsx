@@ -65,6 +65,7 @@ const Layout: React.FC = () => {
 
   const isExpanded = sidebarOpen || isHovering;
   const isUserMenuOpen = Boolean(userMenuAnchor);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
